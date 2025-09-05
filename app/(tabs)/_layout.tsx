@@ -1,45 +1,89 @@
+import { THEMES } from '@/constants/Colors';
+import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '@react-navigation/native';
 import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+export default function TabLayoutWithIcons() {
+  const theme = useTheme();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
+        tabBarActiveTintColor: THEMES.LIGHT.primary,
+        tabBarInactiveTintColor: theme.colors.text + '80', // Añade transparencia
+        tabBarStyle: {
+          backgroundColor: theme.colors.card,
+          borderTopColor: theme.colors.border,
+          borderTopWidth: 1,
+          paddingBottom: 8,
+          paddingTop: 8,
+          height: 65,
+        },
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: '500',
+          marginTop: 4,
+        },
+        tabBarIconStyle: {
+          marginBottom: -4,
+        },
+        
+        headerStyle: {
+          backgroundColor: theme.colors.card,
+          elevation: 0,
+          shadowOpacity: 0,
+          borderBottomWidth: 1,
+          borderBottomColor: theme.colors.border,
+        },
+        headerShown: false
+      }}
+    >
+      
+      {/* Dashboard */}
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'Inicio',
+          tabBarIcon: ({ color, focused, size }) => (
+            <Ionicons 
+              name={focused ? 'home' : 'home-outline'} 
+              size={size} 
+              color={color} 
+            />
+          ),
+          headerStyle: {
+            backgroundColor: theme.colors.primary,
+          },
+          headerTintColor: 'white',
         }}
       />
+      
+      {/* Chat activo */}
       <Tabs.Screen
         name="explore"
         options={{
           title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          tabBarIcon: ({ color, focused, size }) => (
+            <Ionicons 
+              name={focused ? 'chatbubbles' : 'chatbubbles-outline'} 
+              size={size} 
+              color={color} 
+            />
+          ),
+          headerTitle: 'Asistente IA',
+          // Botón de acción en el header
+          headerRight: () => (
+            <Ionicons 
+              name="refresh" 
+              size={24} 
+              color={theme.colors.text} 
+              style={{ marginRight: 16 }}
+              onPress={() => {/* Nuevo chat */}}
+            />
+          ),
         }}
       />
+           
     </Tabs>
   );
 }
