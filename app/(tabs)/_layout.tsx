@@ -10,7 +10,7 @@ export default function TabLayoutWithIcons() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: THEMES.LIGHT.primary,
-        tabBarInactiveTintColor: theme.colors.text + '80', // Añade transparencia
+        tabBarInactiveTintColor: theme.colors.text + '80',
         tabBarStyle: {
           backgroundColor: theme.colors.card,
           borderTopColor: theme.colors.border,
