@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/Colors";
 import "@/global.css";
 import { useColorScheme } from "nativewind";
 import { Text, TextProps } from "react-native";
@@ -14,7 +15,7 @@ export function ThemedText({
   darkColor,
   type = "default",
   className = "",
-  style,
+  style = "",
   ...rest
 }: ThemedTextProps) {
   const { colorScheme } = useColorScheme();
@@ -29,35 +30,35 @@ export function ThemedText({
       case "defaultSemiBold":
         return "text-base font-semibold leading-6";
       case "link":
-        return "text-base leading-7 text-blue-600 dark:text-blue-400";
+        return `text-base leading-7 text-[${Colors.primary}] underline`;
       default:
         return "text-base leading-6";
     }
   };
 
   // Color dinámico basado en el tema
-  const getColorStyle = () => {
-    if (type === "link") return {}; // El link usa clases de Tailwind
+  // const getColorStyle = () => {
+  //   if (type === "link") return {}; // El link usa clases de Tailwind
 
-    if (lightColor && darkColor) {
-      return {
-        color: colorScheme === "dark" ? darkColor : lightColor,
-      };
-    }
-    return {};
-  };
+  //   if (lightColor && darkColor) {
+  //     return {
+  //       color: colorScheme === "dark" ? darkColor : lightColor,
+  //     };
+  //   }
+  //   return {};
+  // };
 
   // Combinar clases manualmente (simple concatenación)
   const baseClasses = type !== "link" ? "text-gray-900 dark:text-white" : "";
   const typeClasses = getTypeClasses();
-  const finalClassName = [baseClasses, typeClasses, className]
+  const finalClassName = [baseClasses, typeClasses, className, style]
     .filter(Boolean)
     .join(" ");
 
   return (
     <Text
       className={finalClassName}
-      style={[getColorStyle(), style]}
+      style={[style]}
       {...rest}
     />
   );

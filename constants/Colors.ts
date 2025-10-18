@@ -1,122 +1,102 @@
-/**
- * FUENTE DE VERDAD para todos los colores de la aplicación
- * Cambiar aquí actualiza automáticamente toda la app
- */
+// constants/colors.ts
+export const Colors = {
+  // Colores principales (azules)
+  primary: '#023e8a',
+  secondary: '#2584b7',
+  accent: '#03045e',
 
-// Paleta principal - CAMBIAR AQUÍ PARA ACTUALIZAR TODA LA APP
-const BRAND_COLORS = {
-  // Colores principales de tu marca
-  PRIMARY: '#023e8a',      // Azul principal
-  SECONDARY: '#f59e0b',    // Naranja secundario
-  ACCENT: '#7c3aed',       // Púrpura para destacar
-  
+  light_primary: '#c8f0f7',
+  light_secondary: '#90e0ef',
   // Estados
-  SUCCESS: '#22c55e',      // Verde
-  WARNING: '#f59e0b',      // Amarillo/Naranja
-  ERROR: '#ef4444',        // Rojo
-  INFO: '#3b82f6',         // Azul información
+  error: '#FF3B30',
+  warning: '#FF9500',
+  success: '#34C759',
+  info: '#48cae4', // Usa tu accent color
+
+  // Otros
+  disabled: '#90e0ef',
+  overlay: 'rgba(3, 4, 94, 0.5)', // Dark overlay con tu color base
+  
+  // Gradientes (valores individuales para usarlos en gradientes)
+  gradient: {
+    from: '#03045e',
+    to: '#023e8a',
+    accent: '#48cae4',
+  },
 };
 
-// Grises (muy importante para UI consistente)
-const GRAY_SCALE = {
-  WHITE: '#ffffff',
-  GRAY_50: '#fafafa',
-  GRAY_100: '#f5f5f5', 
-  GRAY_200: '#e5e5e5',
-  GRAY_300: '#d4d4d4',
-  GRAY_400: '#a3a3a3',
-  GRAY_500: '#737373',
-  GRAY_600: '#525252',
-  GRAY_700: '#404040',
-  GRAY_800: '#262626',
-  GRAY_900: '#171717',
-  BLACK: '#000000',
+// Tema oscuro (por defecto)
+export const DarkTheme = {
+  ...Colors,
+  background: '#03045e',
+  text: '#c8f0f7',
+  textSecondary: '#90e0ef',
 };
 
-// Colores específicos para tu app de IA
-const AI_COLORS = {
-  USER_BUBBLE: BRAND_COLORS.PRIMARY,
-  AI_BUBBLE: GRAY_SCALE.GRAY_100,
-  AI_BUBBLE_DARK: GRAY_SCALE.GRAY_700,
-  CODE_BACKGROUND: '#1e293b',
-  SYNTAX_HIGHLIGHT: '#f1f5f9',
+// Tema claro (alternativa)
+export const LightTheme = {
+  primary: '#023e8a',
+  secondary: '#2584b7',
+  accent: '#48cae4',
+  
+  background: '#c8f0f7',
+  backgroundLight: '#ffffff',
+  backgroundMuted: '#90e0ef',
+  
+  text: '#03045e',
+  textSecondary: '#2584b7',
+  textMuted: '#90e0ef',
+  textDark: '#03045e',
+  
+  error: '#FF3B30',
+  warning: '#FF9500',
+  success: '#34C759',
+  info: '#48cae4',
+  
+  border: '#2584b7',
+  borderLight: '#48cae4',
+  borderMuted: '#90e0ef',
+  
+  disabled: '#90e0ef',
+  overlay: 'rgba(200, 240, 247, 0.5)',
+  
+  gradient: {
+    from: '#c8f0f7',
+    to: '#90e0ef',
+    accent: '#023e8a',
+  },
 };
 
-// TEMAS PREDEFINIDOS
-export const THEMES = {
-  LIGHT: {
-    // Fondos
-    background: GRAY_SCALE.WHITE,
-    surface: GRAY_SCALE.GRAY_50,
-    card: GRAY_SCALE.WHITE,
-    
-    // Textos
-    text: GRAY_SCALE.GRAY_900,
-    textSecondary: GRAY_SCALE.GRAY_600,
-    textMuted: GRAY_SCALE.GRAY_500,
-    
-    // Bordes
-    border: GRAY_SCALE.GRAY_200,
-    borderFocus: BRAND_COLORS.PRIMARY,
-    
-    // Estados
-    primary: BRAND_COLORS.PRIMARY,
-    secondary: BRAND_COLORS.SECONDARY,
-    success: BRAND_COLORS.SUCCESS,
-    warning: BRAND_COLORS.WARNING,
-    error: BRAND_COLORS.ERROR,
-    
-    // Chat específico
-    userBubble: AI_COLORS.USER_BUBBLE,
-    aiBubble: AI_COLORS.AI_BUBBLE,
-    codeBlock: AI_COLORS.CODE_BACKGROUND,
+// Paleta extendida para componentes específicos
+export const ComponentColors = {
+  // Botones
+  button: {
+    primary: Colors.primary,
+    secondary: Colors.secondary,
+    accent: Colors.accent,
+    disabled: Colors.disabled,
   },
   
-  DARK: {
-    // Fondos  
-    background: GRAY_SCALE.BLACK,
-    surface: GRAY_SCALE.GRAY_900,
-    card: GRAY_SCALE.GRAY_800,
-    
-    // Textos
-    text: GRAY_SCALE.GRAY_50,
-    textSecondary: GRAY_SCALE.GRAY_300,
-    textMuted: GRAY_SCALE.GRAY_400,
-    
-    // Bordes
-    border: GRAY_SCALE.GRAY_700,
-    borderFocus: BRAND_COLORS.PRIMARY,
-    
-    // Estados (algunos más claros para tema oscuro)
-    primary: BRAND_COLORS.PRIMARY,
-    secondary: BRAND_COLORS.SECONDARY, 
-    success: BRAND_COLORS.SUCCESS,
-    warning: BRAND_COLORS.WARNING,
-    error: BRAND_COLORS.ERROR,
-    
-    // Chat específico
-    userBubble: AI_COLORS.USER_BUBBLE,
-    aiBubble: AI_COLORS.AI_BUBBLE_DARK,
-    codeBlock: AI_COLORS.CODE_BACKGROUND,
-  }
+  // Cards
+  // card: {
+  //   background: Colors.backgroundMuted,
+  //   border: Colors.borderLight,
+  //   shadow: 'rgba(2, 62, 138, 0.1)',
+  // },
+  
+  // Inputs
+  input: {
+    background: "#ffffff",
+    border: Colors.light_secondary,
+    borderFocus: Colors.accent,
+    text: "#03045e",
+    placeholder: Colors.overlay,
+  },
+  
+  // Tabs
+  // tab: {
+  //   active: Colors.accent,
+  //   inactive: Colors.textMuted,
+  //   background: Colors.background,
+  // },
 };
-
-// EXPORTS para usar en componentes
-export const COLORS = {
-  ...BRAND_COLORS,
-  ...GRAY_SCALE,
-  ...AI_COLORS,
-};
-
-// Aliases para fácil acceso
-export const PRIMARY = BRAND_COLORS.PRIMARY;
-export const SECONDARY = BRAND_COLORS.SECONDARY;
-export const SUCCESS = BRAND_COLORS.SUCCESS;
-export const ERROR = BRAND_COLORS.ERROR;
-
-// Para usar con StyleSheet
-export const LIGHT_THEME = THEMES.LIGHT;
-export const DARK_THEME = THEMES.DARK;
-
-// Función helper para obtener tema
-export const getTheme = (isDark: boolean) => isDark ? DARK_THEME : LIGHT_THEME;

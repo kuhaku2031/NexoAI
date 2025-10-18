@@ -18,7 +18,7 @@ export default function TabTwoScreen() {
           style={styles.headerImage}
         />
       }>
-      <View style={styles.titleContainer}>
+      <View style={styles.titleContainer} className="mb-2">
         <ThemedText type="title">Explore</ThemedText>
       </View>
       <ThemedText>This app includes example code to help you get started.</ThemedText>
