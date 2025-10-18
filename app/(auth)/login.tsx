@@ -5,11 +5,20 @@ import { InputDisplay } from '@/components/InputDisplay';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { Colors, ComponentColors } from '@/constants/Colors';
+import { useSafeArea } from '@/hooks/useSafeArea';
 import { Checkbox } from 'expo-checkbox';
+import { router } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 
 export default function LoginScreen() {
+  const containerPadding = useSafeArea({
+    type: 'topBottom',
+    extraTop: 20,
+    extraBottom: 20
+  });
+
+
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [isChecked, setChecked] = useState(false);
@@ -19,38 +28,43 @@ export default function LoginScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.header}>
-          <GradientCircleIcon iconName="cash-register" iconSize={40} iconColor={"#ffffff"} />
-          <ThemedText type='title' style={{ color: Colors.primary }}>Business POS</ThemedText>
-          <ThemedText type='subtitle' style={{ color: Colors.secondary }}>Inicia sesión en tu cuenta</ThemedText>
-        </View>
-
-        {/* Form */}
-        <View style={styles.form}>
-
-          <InputDisplay value={email} onChangeText={setEmail} placeholder='Email' label='Email' icon={"mail-outline"} />
-
-          <InputDisplay value={password} onChangeText={setPassword} placeholder='Contraseña' label='Contraseña' icon={"lock-closed-outline"} showToggle={false} />
-
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: 8 }}>
-            <View style={styles.checkboxContainer}>
-              <Checkbox value={isChecked} onValueChange={setChecked} style={styles.checkbox} color={Colors.primary} />
-              <ThemedText style={styles.text}>Recordarme</ThemedText>
-            </View>
-            <ThemedText type='link'  >Olvidaste tu contraseña?</ThemedText>
+    <Animated.ScrollView style={styles.container}>
+      <View style={[styles.content, containerPadding]}>
+        <View style={styles.content}>
+          <View style={styles.header}>
+            <GradientCircleIcon iconName="storefront-outline" iconSize={40} iconColor={"#ffffff"} />
+            <ThemedText type='title' style={{ color: Colors.primary }}>Business POS</ThemedText>
+            <ThemedText type='subtitle' style={{ color: Colors.secondary }}>Inicia sesión en tu cuenta</ThemedText>
           </View>
 
-          <ThemedButton title='Iniciar Sesion' onPress={handleLogin} type='gradient' />
+          {/* Form */}
+          <View style={styles.form}>
 
-          <DividerWithText text="¿No tienes cuenta?" />
+            <InputDisplay value={email} onChangeText={setEmail} placeholder='Email' label='Email' icon={"mail-outline"} />
 
-          <ThemedButton title='Crear Cuenta' type='outline' />
+            <InputDisplay value={password} onChangeText={setPassword} placeholder='Contraseña' label='Contraseña' icon={"lock-closed-outline"} showToggle={false} />
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: 8 }}>
+              <View style={styles.checkboxContainer}>
+                <Checkbox value={isChecked} onValueChange={setChecked} style={styles.checkbox} color={Colors.primary} />
+                <ThemedText style={styles.text}>Recordarme</ThemedText>
+              </View>
+              <ThemedText type='link'  >Olvidaste tu contraseña?</ThemedText>
+            </View>
+
+            <ThemedButton title='Iniciar Sesion' onPress={handleLogin} type='gradient' />
+
+            <DividerWithText text="¿No tienes cuenta?" />
+
+            <ThemedButton title='Crear Cuenta' type='outline' onPress={() => router.push('/register')} />
+          </View>
+        </View>
+
+                <View style={{ alignItems: 'center', marginTop: 20 }}>
+          <ThemedText type='default' style={{ color: Colors.secondary, fontSize: 16, textAlign: 'center' }}>Al continuar, aceptas nuestros Términos de Servicio</ThemedText>
         </View>
       </View>
-
-    </View>
+    </Animated.ScrollView>
   );
 }
 
@@ -58,8 +72,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.light_primary,
-    justifyContent: 'center',
-    alignItems: 'center',
     paddingHorizontal: 20,
   },
   content: {

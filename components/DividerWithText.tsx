@@ -1,5 +1,5 @@
 // components/DividerWithText.tsx
-import { Colors } from '@/constants/Colors';
+import { Colors, ComponentColors } from '@/constants/Colors';
 import { StyleSheet, Text, View } from 'react-native';
 
 interface DividerWithTextProps {
@@ -13,7 +13,7 @@ interface DividerWithTextProps {
 export function DividerWithText({
   text,
   textColor = Colors.secondary,
-  lineColor = Colors.secondary,
+  lineColor = ComponentColors.input.border,
   backgroundColor = "#ffffff",
 }: DividerWithTextProps) {
   return (

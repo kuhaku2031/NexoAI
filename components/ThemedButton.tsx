@@ -3,6 +3,7 @@ import { Colors } from "@/constants/Colors";
 import "@/global.css";
 import { LinearGradient } from "expo-linear-gradient";
 import { useColorScheme } from "nativewind";
+import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps } from "react-native";
 
 export type ThemedButtonProps = TouchableOpacityProps & {
@@ -31,6 +32,7 @@ export function ThemedButton({
   ...rest
 }: ThemedButtonProps) {
   const { colorScheme } = useColorScheme();
+  const [isPressed, setIsPressed] = useState(false);
 
   // Obtener clases base según tipo y tamaño
   const getTypeClasses = () => {
@@ -74,7 +76,7 @@ export function ThemedButton({
 
     if (type === "outline") {
       return {
-        backgroundColor: "transparent",
+        backgroundColor: isPressed ? Colors.accent : "transparent",
         borderWidth: 2,
         borderColor:
           colorScheme === "dark"
@@ -86,15 +88,27 @@ export function ThemedButton({
     return {};
   };
 
-  // Obtener color del texto
   const getTextColor = () => {
     if (type === "outline") {
+      // Si está presionado, el texto es del color primario
+      if (isPressed) {
+        return Colors.primary;
+      }
       return colorScheme === "dark"
         ? darkColor || Colors.accent
         : lightColor || Colors.accent;
     }
     return Colors.secondary;
   };
+
+    const handlePressIn = () => {
+    setIsPressed(true);
+  };
+
+  const handlePressOut = () => {
+    setIsPressed(false);
+  };
+
 
   const buttonStyle = getButtonStyle();
   const textColor = getTextColor();
@@ -103,7 +117,7 @@ export function ThemedButton({
   if (type === "gradient") {
     return (
       <LinearGradient
-        colors={[Colors.primary, Colors.accent]}
+        colors={[Colors.accent,Colors.primary]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={[
@@ -128,6 +142,8 @@ export function ThemedButton({
     <TouchableOpacity
       style={[styles.button, buttonStyle]}
       onPress={onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
       disabled={disabled}
       {...rest}
     >
