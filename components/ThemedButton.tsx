@@ -101,7 +101,7 @@ export function ThemedButton({
     return Colors.secondary;
   };
 
-    const handlePressIn = () => {
+  const handlePressIn = () => {
     setIsPressed(true);
   };
 
@@ -116,25 +116,28 @@ export function ThemedButton({
   // Para gradiente
   if (type === "gradient") {
     return (
-      <LinearGradient
-        colors={[Colors.accent,Colors.primary]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={[
-          styles.button,
-          disabled && { opacity: 0.6 },
-        ]}
+      <TouchableOpacity
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        disabled={disabled}
+        {...rest}
       >
-        <TouchableOpacity
-          onPress={onPress}
-          disabled={disabled}
-          {...rest}
+        <LinearGradient
+          colors={[Colors.accent, Colors.primary]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[
+            styles.button,
+            disabled && { opacity: 0.6 },
+          ]}
         >
+
           <Text style={[styles.buttonText, { color: "#ffffff" }]}>
             {title}
           </Text>
-        </TouchableOpacity>
-      </LinearGradient>
+        </LinearGradient>
+      </TouchableOpacity>
     );
   }
 

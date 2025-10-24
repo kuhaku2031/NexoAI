@@ -23,10 +23,6 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [isChecked, setChecked] = useState(false);
 
-  const handleLogin = () => {
-
-  }
-
   return (
     <Animated.ScrollView style={styles.container}>
       <View style={[styles.content, containerPadding]}>
@@ -52,7 +48,7 @@ export default function LoginScreen() {
               <ThemedText type='link'  >Olvidaste tu contraseña?</ThemedText>
             </View>
 
-            <ThemedButton title='Iniciar Sesion' onPress={handleLogin} type='gradient' />
+            <ThemedButton title='Iniciar Sesion' onPress={() => router.push('/(tabs)')} type='gradient'  disabled={false}/>
 
             <DividerWithText text="¿No tienes cuenta?" />
 

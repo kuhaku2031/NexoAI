@@ -8,6 +8,13 @@ export const Colors = {
   light_primary: '#c8f0f7',
   light_secondary: '#90e0ef',
   // Estados
+
+
+  // background y texto
+  background: "#c8f0f7",
+  backgroundLight: '#ffffff',
+  backgroundMuted: '#90e0ef',
+
   error: '#FF3B30',
   warning: '#FF9500',
   success: '#34C759',
