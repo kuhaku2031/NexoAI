@@ -4,12 +4,12 @@ import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 
-export default function DashboardScreen() {
+export default function POSScreen() {
   return (
     <ParallaxScrollView>
       <View style={styles.titleContainer}>
         <ThemedText type="title" lightColor="#FF6B35" 
-        darkColor="#FFE66D">DashboardScreen</ThemedText>
+        darkColor="#FFE66D">POSScreen</ThemedText>
         <HelloWave />
       </View>
       <View style={styles.stepContainer}>
