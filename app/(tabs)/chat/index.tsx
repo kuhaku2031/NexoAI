@@ -1,12 +1,12 @@
 import { Platform, StyleSheet, View } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { SafeScreen } from '@/components/SafeScreen';
 import { ThemedText } from '@/components/ThemedText';
 
 export default function ChatScreen() {
   return (
-    <ParallaxScrollView>
+    <SafeScreen scrollable={true} contentContainerStyle={{ paddingTop: 20, paddingBottom: 40 }}>
       <View style={styles.titleContainer}>
         <ThemedText type="title" lightColor="#FF6B35" 
         darkColor="#FFE66D">Chat ChatScreen</ThemedText>
@@ -43,7 +43,7 @@ export default function ChatScreen() {
           <ThemedText type="defaultSemiBold">app-example</ThemedText>.
         </ThemedText>
       </View>
-    </ParallaxScrollView>
+    </SafeScreen>
   );
 }
 

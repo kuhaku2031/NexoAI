@@ -1,12 +1,12 @@
 import { Platform, StyleSheet, View } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { SafeScreen } from '@/components/SafeScreen';
 import { ThemedText } from '@/components/ThemedText';
 
 export default function DashboardScreen() {
   return (
-    <ParallaxScrollView>
+    <SafeScreen scrollable={true} contentContainerStyle={{ paddingTop: 20, paddingBottom: 40 }}>
       <View style={styles.titleContainer}>
         <ThemedText type="title" lightColor="#FF6B35" 
         darkColor="#FFE66D">DashboardScreen</ThemedText>
@@ -43,7 +43,7 @@ export default function DashboardScreen() {
           <ThemedText type="defaultSemiBold">app-example</ThemedText>.
         </ThemedText>
       </View>
-    </ParallaxScrollView>
+    </SafeScreen>
   );
 }
 

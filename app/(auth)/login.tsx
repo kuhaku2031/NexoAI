@@ -2,30 +2,23 @@
 import { DividerWithText } from '@/components/DividerWithText';
 import { GradientCircleIcon } from '@/components/GradientCircleIcon';
 import { InputDisplay } from '@/components/InputDisplay';
+import { SafeScreen } from '@/components/SafeScreen';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { Colors, ComponentColors } from '@/constants/Colors';
-import { useSafeArea } from '@/hooks/useSafeArea';
 import { Checkbox } from 'expo-checkbox';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 export default function LoginScreen() {
-  const containerPadding = useSafeArea({
-    type: 'topBottom',
-    extraTop: 20,
-    extraBottom: 20
-  });
-
 
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [isChecked, setChecked] = useState(false);
 
   return (
-    <Animated.ScrollView style={styles.container}>
-      <View style={[styles.content, containerPadding]}>
+    <SafeScreen style={styles.container} edges={['top', 'bottom']} backgroundColor={Colors.light_primary}>
         <View style={styles.content}>
           <View style={styles.header}>
             <GradientCircleIcon iconName="storefront-outline" iconSize={40} iconColor={"#ffffff"} />
@@ -59,8 +52,7 @@ export default function LoginScreen() {
                 <View style={{ alignItems: 'center', marginTop: 20 }}>
           <ThemedText type='default' style={{ color: Colors.secondary, fontSize: 16, textAlign: 'center' }}>Al continuar, aceptas nuestros Términos de Servicio</ThemedText>
         </View>
-      </View>
-    </Animated.ScrollView>
+</SafeScreen>
   );
 }
 
