@@ -1,6 +1,5 @@
-import { Platform, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
 import { SafeScreen } from '@/components/SafeScreen';
 import { ThemedText } from '@/components/ThemedText';
 
@@ -8,24 +7,10 @@ export default function DashboardScreen() {
   return (
     <SafeScreen scrollable={true} contentContainerStyle={{ paddingTop: 20, paddingBottom: 40 }}>
       <View style={styles.titleContainer}>
-        <ThemedText type="title" lightColor="#FF6B35" 
-        darkColor="#FFE66D">DashboardScreen</ThemedText>
-        <HelloWave />
+        <ThemedText type="title" >Dashboard</ThemedText>
       </View>
       <View style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
+        <ThemedText type="subtitle">Welcome back! Here's your business overview.</ThemedText>
       </View>
       <View style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 2: Explore</ThemedText>
