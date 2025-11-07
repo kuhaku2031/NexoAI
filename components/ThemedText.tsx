@@ -48,10 +48,8 @@ export function ThemedText({
   //   return {};
   // };
 
-  // Combinar clases manualmente (simple concatenación)
-  const baseClasses = type !== "link" ? "text-gray-900 dark:text-white" : "";
   const typeClasses = getTypeClasses();
-  const finalClassName = [baseClasses, typeClasses, className, style]
+  const finalClassName = [typeClasses, className]
     .filter(Boolean)
     .join(" ");
 

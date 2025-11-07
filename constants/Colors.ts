@@ -3,17 +3,22 @@ export const Colors = {
   // Colores principales (azules)
   primary: '#023e8a',
   secondary: '#2584b7',
-  accent: '#03045e',
+  accent: '#002a52',
 
-  light_primary: '#c8f0f7',
+  light_primary: '#e4f5fb',
   light_secondary: '#90e0ef',
-  // Estados
 
+  // Background
+  bg_light: '#90e0ef',
+  bg_light_secondary: '#e9f1fb',
+  bg_light_accent: '#d8ecf4',
 
-  // background y texto
-  background: "#c8f0f7",
-  backgroundLight: '#ffffff',
-  backgroundMuted: '#90e0ef',
+  bg_dark: '#002a52',
+  bg_dark_secondary: '#006283',
+
+  // Text
+  text_primary: "#002a52",
+  text_seconday: "#006283",
 
   error: '#FF3B30',
   warning: '#FF9500',
@@ -23,13 +28,7 @@ export const Colors = {
   // Otros
   disabled: '#90e0ef',
   overlay: 'rgba(3, 4, 94, 0.5)', // Dark overlay con tu color base
-  
-  // Gradientes (valores individuales para usarlos en gradientes)
-  gradient: {
-    from: '#03045e',
-    to: '#023e8a',
-    accent: '#48cae4',
-  },
+
 };
 
 // Tema oscuro (por defecto)
@@ -85,11 +84,10 @@ export const ComponentColors = {
   },
   
   // Cards
-  // card: {
-  //   background: Colors.backgroundMuted,
-  //   border: Colors.borderLight,
-  //   shadow: 'rgba(2, 62, 138, 0.1)',
-  // },
+  card: {
+    background: "#f2fafd",
+    shadow: 'rgba(2, 62, 138, 0.1)',
+  },
   
   // Inputs
   input: {
@@ -99,11 +97,4 @@ export const ComponentColors = {
     text: "#03045e",
     placeholder: Colors.overlay,
   },
-  
-  // Tabs
-  // tab: {
-  //   active: Colors.accent,
-  //   inactive: Colors.textMuted,
-  //   background: Colors.background,
-  // },
 };

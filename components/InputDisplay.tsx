@@ -90,9 +90,7 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         color: ComponentColors.input.text,
-        fontSize: 16,
-        letterSpacing: 2,
-        fontFamily: 'monospace',
+        fontSize: 14,
     },
     iconButton: {
         padding: 8,

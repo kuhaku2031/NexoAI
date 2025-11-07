@@ -1,27 +1,37 @@
 // components/BlurTabBarBackground.tsx
 import { BlurView } from 'expo-blur';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 export function BlurTabBarBackground() {
+  // En Android, usa un fondo semitransparente blanco
+  if (Platform.OS === 'android') {
+    return (
+      <View 
+        style={[
+          StyleSheet.absoluteFill, 
+          { 
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+          }
+        ]} 
+      />
+    );
+  }
+  
+  // En iOS, usa BlurView con un fondo semitransparente
   return (
-    <View style={styles.background}>
     <BlurView
-      intensity={70} 
-      style={styles.blurContainer}
+      tint="light"
+      intensity={100}
+      style={[
+        StyleSheet.absoluteFill,
+        {
+          backgroundColor: 'rgba(255, 255, 255, 0.7)', // Fondo semitransparente
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+        }
+      ]}
     />
-    </View>
   );
 }
-
-const styles = StyleSheet.create({
-    background: {
-    flex: 1,
-  },
-    blurContainer: {
-    flex: 1,
-    textAlign: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    borderRadius: 20,
-  },
-});

@@ -124,7 +124,7 @@ export function ThemedButton({
         {...rest}
       >
         <LinearGradient
-          colors={[Colors.accent, Colors.primary]}
+          colors={[Colors.bg_dark, Colors.bg_dark_secondary]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={[

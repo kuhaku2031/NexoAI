@@ -2,24 +2,16 @@
 import { DividerWithText } from '@/components/DividerWithText';
 import { GradientCircleIcon } from '@/components/GradientCircleIcon';
 import { InputDisplay } from '@/components/InputDisplay';
+import { SafeScreen } from '@/components/SafeScreen';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { Colors, ComponentColors } from '@/constants/Colors';
-import { useSafeArea } from '@/hooks/useSafeArea';
 import { Checkbox } from 'expo-checkbox';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { Platform, StyleSheet, View } from 'react-native';
 
 export default function RegisterScreen() {
-
-  const containerPadding = useSafeArea({
-    type: 'topBottom',
-    extraTop: 20,
-    extraBottom: 20
-  });
-
 
   const [name, setName] = useState('');
   const [business, setBusiness] = useState('');
@@ -33,8 +25,7 @@ export default function RegisterScreen() {
   }
 
   return (
-    <Animated.ScrollView style={styles.container}>
-      <View style={[styles.content, containerPadding]}>
+    <SafeScreen scrollable={true} edges={['top', 'bottom']} contentContainerStyle={{ paddingTop: 40, paddingBottom: Platform.OS === 'ios' ? 100 : 80, }} backgroundColor={Colors.bg_light}>
         <View style={styles.header}>
           <GradientCircleIcon iconName="storefront-outline" iconSize={40} iconColor={"#ffffff"} />
           <ThemedText type='title' style={{ color: Colors.primary }}>Business POS</ThemedText>
@@ -75,18 +66,11 @@ export default function RegisterScreen() {
         <View style={{ alignItems: 'center', marginTop: 20 }}>
           <ThemedText type='default' style={{ color: Colors.secondary, fontSize: 16, textAlign: 'center' }}>Protegemos tu información con encriptación de nivel empresarial</ThemedText>
         </View>
-      </View>
-    </Animated.ScrollView>
+    </SafeScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light_primary,
-    paddingHorizontal: 20,
-  },
-
   content: {
     flex: 1,
     width: '100%',

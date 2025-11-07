@@ -18,49 +18,49 @@ export default function LoginScreen() {
   const [isChecked, setChecked] = useState(false);
 
   return (
-    <SafeScreen style={styles.container} edges={['top', 'bottom']} backgroundColor={Colors.light_primary}>
-        <View style={styles.content}>
-          <View style={styles.header}>
-            <GradientCircleIcon iconName="storefront-outline" iconSize={40} iconColor={"#ffffff"} />
-            <ThemedText type='title' style={{ color: Colors.primary }}>Business POS</ThemedText>
-            <ThemedText type='subtitle' style={{ color: Colors.secondary }}>Inicia sesión en tu cuenta</ThemedText>
-          </View>
+    <SafeScreen style={styles.container} edges={['top', 'bottom']} backgroundColor={Colors.bg_light}>
+      <View style={styles.content}>
+        <View style={styles.header}>
+          <GradientCircleIcon iconName="storefront-outline" iconSize={40} iconColor={"#ffffff"} />
+          <ThemedText type='title' style={{ color: Colors.primary }}>Business POS</ThemedText>
+          <ThemedText type='subtitle' style={{ color: Colors.secondary }}>Inicia sesión en tu cuenta</ThemedText>
+        </View>
 
-          {/* Form */}
-          <View style={styles.form}>
+        {/* Form */}
+        <View style={styles.form}>
 
-            <InputDisplay value={email} onChangeText={setEmail} placeholder='Email' label='Email' icon={"mail-outline"} />
+          <InputDisplay value={email} onChangeText={setEmail} placeholder='Email' label='Email' icon={"mail-outline"} />
 
-            <InputDisplay value={password} onChangeText={setPassword} placeholder='Contraseña' label='Contraseña' icon={"lock-closed-outline"} showToggle={false} />
+          <InputDisplay value={password} onChangeText={setPassword} placeholder='Contraseña' label='Contraseña' icon={"lock-closed-outline"} showToggle={false} />
 
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: 8 }}>
-              <View style={styles.checkboxContainer}>
-                <Checkbox value={isChecked} onValueChange={setChecked} style={styles.checkbox} color={Colors.primary} />
-                <ThemedText style={styles.text}>Recordarme</ThemedText>
-              </View>
-              <ThemedText type='link'  >Olvidaste tu contraseña?</ThemedText>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: 8 }}>
+            <View style={styles.checkboxContainer}>
+              <Checkbox value={isChecked} onValueChange={setChecked} style={styles.checkbox} color={Colors.primary} />
+              <ThemedText style={styles.text}>Recordarme</ThemedText>
             </View>
-
-            <ThemedButton title='Iniciar Sesion' onPress={() => router.push('/(tabs)')} type='gradient'  disabled={false}/>
-
-            <DividerWithText text="¿No tienes cuenta?" />
-
-            <ThemedButton title='Crear Cuenta' type='outline' onPress={() => router.push('/register')} />
+            <ThemedText type='link'  >Olvidaste tu contraseña?</ThemedText>
           </View>
-        </View>
 
-                <View style={{ alignItems: 'center', marginTop: 20 }}>
-          <ThemedText type='default' style={{ color: Colors.secondary, fontSize: 16, textAlign: 'center' }}>Al continuar, aceptas nuestros Términos de Servicio</ThemedText>
+          <ThemedButton title='Iniciar Sesion' onPress={() => router.push('/(tabs)')} type='gradient' disabled={false} />
+
+          <DividerWithText text="¿No tienes cuenta?" />
+
+          <ThemedButton title='Crear Cuenta' type='outline' onPress={() => router.push('/register')} />
         </View>
-</SafeScreen>
+      </View>
+
+      <View style={{ alignItems: 'center', marginTop: 20 }}>
+        <ThemedText type='default' style={{ color: Colors.secondary, fontSize: 16, textAlign: 'center' }}>Al continuar, aceptas nuestros Términos de Servicio</ThemedText>
+      </View>
+    </SafeScreen>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.light_primary,
     paddingHorizontal: 20,
+    paddingTop: 20,
   },
   content: {
     width: '100%',

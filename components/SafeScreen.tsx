@@ -1,7 +1,7 @@
 // components/SafeScreen.tsx
 import { Colors } from '@/constants/Colors';
 import { ReactNode } from 'react';
-import { ScrollView, StyleSheet, ViewStyle } from 'react-native';
+import { Animated, ScrollView, StyleSheet, ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface SafeScreenProps {
@@ -14,17 +14,17 @@ interface SafeScreenProps {
   centered?: boolean;
 }
 
-export function SafeScreen({ 
-  children, 
-  style, 
+export function SafeScreen({
+  children,
+  style,
   edges = ['top', 'bottom'],
-  backgroundColor = Colors.light_primary,
+  backgroundColor = Colors.bg_light_secondary,
   scrollable = false,
   contentContainerStyle,
   centered = false,
 }: SafeScreenProps) {
   const content = scrollable ? (
-    <ScrollView 
+    <ScrollView
       contentContainerStyle={[
         styles.scrollContent,
         centered && styles.centered,
@@ -37,11 +37,13 @@ export function SafeScreen({
   ) : children;
 
   return (
-    <SafeAreaView 
+    <SafeAreaView
       style={[styles.container, { backgroundColor }, style]}
       edges={edges}
     >
-      {content}
+      <Animated.ScrollView>
+        {content}
+      </Animated.ScrollView>
     </SafeAreaView>
   );
 }
