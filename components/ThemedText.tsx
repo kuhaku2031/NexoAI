@@ -36,22 +36,9 @@ export function ThemedText({
     }
   };
 
-  // Color dinámico basado en el tema
-  // const getColorStyle = () => {
-  //   if (type === "link") return {}; // El link usa clases de Tailwind
-
-  //   if (lightColor && darkColor) {
-  //     return {
-  //       color: colorScheme === "dark" ? darkColor : lightColor,
-  //     };
-  //   }
-  //   return {};
-  // };
-
   const typeClasses = getTypeClasses();
   const finalClassName = [typeClasses, className]
-    .filter(Boolean)
-    .join(" ");
+    .filter(Boolean).join(" ");
 
   return (
     <Text

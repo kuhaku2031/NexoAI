@@ -11,6 +11,8 @@ interface PasswordInputProps {
     placeholder?: string;
     label?: string;
     showToggle?: boolean;
+    className?: string;
+    classNameInput?: string;
 }
 
 export function InputDisplay({
@@ -20,6 +22,8 @@ export function InputDisplay({
     label = '',
     icon = '',
     showToggle = true,
+    className = '',
+    classNameInput = '',
 }: PasswordInputProps) {
 
     const [showPassword, setShowPassword] = useState(false);
@@ -30,7 +34,7 @@ export function InputDisplay({
         <View style={styles.container}>
             {label && <Text style={styles.label}>{label}</Text>}
 
-            <View style={styles.inputWrapper}>
+            <View  className={className} style={styles.inputWrapper}>
                 {/* Icono del candado */}
                 <Ionicons
                     name={icon}
@@ -45,6 +49,7 @@ export function InputDisplay({
                     onChangeText={onChangeText}
                     placeholder={placeholder}
                     secureTextEntry={showToggle == true ? false : !showPassword  }
+                    className={classNameInput}
                 />
 
                 {/* Botón toggle */}

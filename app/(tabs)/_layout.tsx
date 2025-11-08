@@ -45,6 +45,10 @@ export default function TabLayout() {
         tabBarActiveTintColor: "#ffffffff",
         tabBarInactiveTintColor: Colors.bg_dark_secondary,
         tabBarActiveBackgroundColor: Colors.bg_dark,
+        tabBarItemStyle: {
+          marginHorizontal: 8,
+          borderRadius: 16,
+        },
         tabBarStyle: Platform.select({
           ios: {
             position: 'absolute',
@@ -52,7 +56,6 @@ export default function TabLayout() {
             borderTopWidth: 0,
             elevation: 0,
             height: 88,
-            paddingBottom: 28,
             paddingTop: 8,
           },
           default: {
@@ -61,7 +64,7 @@ export default function TabLayout() {
             borderTopWidth: 0,
             elevation: 8,
             height: 65,
-            paddingBottom: 12,
+            paddingBottom: 8,
             paddingTop: 8,
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,

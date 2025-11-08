@@ -1,67 +1,112 @@
-import { Platform, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
+import { HeaderBar } from '@/components/HeaderBar';
+import { InputDisplay } from '@/components/InputDisplay';
 import { SafeScreen } from '@/components/SafeScreen';
 import { ThemedText } from '@/components/ThemedText';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { goBack } from 'expo-router/build/global-state/routing';
+import React from 'react';
 
 export default function ChatScreen() {
+  const [message, setMessage] = React.useState('');
+
   return (
-    <SafeScreen scrollable={true} contentContainerStyle={{ paddingTop: 20, paddingBottom: 40 }}>
-      <View style={styles.titleContainer}>
-        <ThemedText type="title" lightColor="#FF6B35" 
-        darkColor="#FFE66D">Chat ChatScreen</ThemedText>
-        <HelloWave />
+    <>
+      <HeaderBar
+        title="Chat AI"
+        subtitle="Always here to help!"
+        showNotifications={true}
+        notificationCount={5}
+        showProfile={true}
+        variant="default"
+        showBackButton={true}
+        onBackPress={goBack}
+      />
+      <SafeScreen scrollable={true} contentContainerStyle={{ paddingBottom: 68, paddingTop: 16, paddingHorizontal: 0 }} edges={["bottom"]}>
+        <View style={styles.chatContainer} className='h-full'>
+          <View style={styles.aiMessageContainer}>
+            <View style={styles.aiMessageIcon}>
+              <MaterialCommunityIcons name="robot-happy-outline" size={24} color={"#ffffff"} className='bg-[#002a52] p-2 rounded-full' />
+            </View>
+            <View style={styles.aiMessageContent}>
+              <ThemedText type="default" style={styles.aiMessageText}>
+                Hello! I'm your AI assistant for the POS system. How can I help you today?
+              </ThemedText>
+            </View>
+          </View>
+
+        </View>
+      </SafeScreen>
+      <View className="absolute bottom-0 min-h-40 left-0 right-0 bg-white p-4 border-t border-gray-200">
+        <View style={styles.inputContainer}>
+          <View className="flex-1 left-0 right-0">
+            <InputDisplay
+            value={message}
+            onChangeText={setMessage}
+            placeholder="Type your message..." 
+            className={"border-none border-0 border-[#002a52] bg-gray-100"}
+            classNameInput={"text-sm bg-gray-100 h-12 px-4 rounded-full"}
+            />
+          </View>
+          <View className='fles align-middle justify-center ml-4'>
+            <Ionicons name="send" size={12} color={"#ffffff"} className='bg-[#002a52] p-3 rounded-full' />
+          </View>
+        </View>
       </View>
-      <View style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </View>
-      <View style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </View>
-      <View style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </View>
-    </SafeScreen>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  // =============================
+  // CHAT STYLES
+  // =============================
+  chatContainer: {
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+
+  // =============================
+  // CHAT AI STYLES
+  // =============================
+  aiMessageContainer: {
+    padding: 12,
+    borderRadius: 12,
+    marginBottom: 12,
+    alignSelf: 'flex-start',
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+    maxWidth: '80%',
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  aiMessageIcon: {
+    padding: 8,
+    borderRadius: 20,
+    marginRight: 4,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  aiMessageContent: {
+    backgroundColor: '#ffffff',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 8,
+    padding: 12,
+    borderRadius: 12,
+  },
+  aiMessageText: {
+    color: '#000000',
+    fontSize: 12,
+  },
+
+  // =============================
+  // CHAT USER STYLES
+  // =============================
+
+  // =============================
+  // INPUT STYLES
+  // =============================
+  inputContainer: {
+    flexDirection: 'row',
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    height: 50,
   },
 });
