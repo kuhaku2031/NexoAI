@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, Platform, StyleSheet, View } from 'react-native';
 
 import { DropDownStyled } from '@/components/DropDwonStyled';
 import { HeaderBar } from '@/components/HeaderBar';
@@ -61,180 +61,184 @@ export default function DashboardScreen() {
   ]);
 
   return (
-  <>
-    <HeaderBar
-      title="Dashboard"
-      subtitle="Welcome back!"
-      showNotifications={true}
-      notificationCount={5}
-      showProfile={true}
-      variant="default"
-      showBackButton={true}
-      onBackPress={goBack}
-    />
-    <SafeScreen scrollable={true} contentContainerStyle={{ paddingBottom: 68 , paddingTop: 24 }} edges={["bottom", "left", "right"]}>
-      {/* Point Sale */}
-      <View style={styles.pointOfSaleContainer}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-          <View style={{ backgroundColor: Colors.bg_light_secondary, padding: 8, borderRadius: 8 }}>
-            <Ionicons name="location-outline" size={24} color={Colors.accent} />
+    <>
+      <HeaderBar
+        title="Dashboard"
+        subtitle="Welcome back!"
+        showNotifications={true}
+        notificationCount={5}
+        showProfile={true}
+        variant="default"
+        showBackButton={true}
+        onBackPress={goBack}
+      />
+      <SafeScreen
+        scrollable={true}
+        edges={['bottom', 'left', 'right',]}
+        contentContainerStyle={{ paddingTop: 20, paddingBottom: Platform.OS === 'ios' ? 88 : 68 }}
+      >
+        {/* Point Sale */}
+        <View style={styles.pointOfSaleContainer}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+            <View style={{ backgroundColor: Colors.bg_light_secondary, padding: 8, borderRadius: 8 }}>
+              <Ionicons name="location-outline" size={24} color={Colors.accent} />
+            </View>
+            <View>
+              <ThemedText type="defaultSemiBold" style={{ color: Colors.text_primary }}>
+                Point of Sale Location
+              </ThemedText>
+              <ThemedText type="defaultSemiBold" style={{ color: Colors.text_seconday }}>
+                Select location to view data
+              </ThemedText>
+            </View>
           </View>
+
           <View>
-            <ThemedText type="defaultSemiBold" style={{ color: Colors.text_primary }}>
-              Point of Sale Location
-            </ThemedText>
-            <ThemedText type="defaultSemiBold" style={{ color: Colors.text_seconday }}>
-              Select location to view data
-            </ThemedText>
+            <DropDownStyled
+              value={value}
+              onValueChange={setValue}
+              open={open}
+              setOpen={setOpen}
+              items={pointsofsale}
+              setItems={setPointsOfSale}
+            />
           </View>
         </View>
 
-        <View>
-          <DropDownStyled
-            value={value}
-            onValueChange={setValue}
-            open={open}
-            setOpen={setOpen}
-            items={pointsofsale}
-            setItems={setPointsOfSale}
-          />
-        </View>
-      </View>
-
-      {/* KPI Cards Grid*/}
-      <View style={styles.kpiContainer}>
-        {/* Daily Sales */}
-        <View style={styles.kpiCard}>
-          <KPICard
-            title="Daily Sales"
-            value="$4,329"
-            icon="cash"
-            trend={{
-              value: '+12.5%',
-              type: 'up',
-            }}
-            subtitle="from yesterday"
-            location="Downtown Branch"
-            status="success"
-          />
-        </View>
-
-        {/* Revenue */}
-        <View style={styles.kpiCard}>
-          <KPICard
-            title="Revenue"
-            value="$28,450"
-            icon="trending-up"
-            trend={{
-              value: '+8.2%',
-              type: 'up',
-            }}
-            subtitle="from last week"
-            location="Downtown Branch"
-            status="success"
-          />
-        </View>
-
-        {/* Low Stock */}
-        <View style={styles.kpiCard}>
-          <KPICard
-            title="Low Stock"
-            value="7"
-            icon="alert-circle"
-            subtitle="Items need restocking"
-            location="Downtown Branch"
-            status="danger"
-          />
-        </View>
-
-        {/* Products */}
-        <View style={styles.kpiCard}>
-          <KPICard
-            title="Products"
-            value="1,247"
-            icon="cart-outline"
-            trend={{
-              value: '+12.5%',
-              type: 'neutral',
-            }}
-            subtitle="from yesterday"
-            location="Downtown Branch"
-            status="warning"
-          />
-        </View>
-      </View>
-
-      {/* Analytics con Gradient */}
-      <View style={styles.analyticsContainer}>
-        <LinearGradient
-          colors={[Colors.accent, Colors.primary]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.gradientContainer}
-        >
-          <View style={styles.chartTitleContainer}>
-            <ThemedText type="subtitle" className='text-white mx-6' >
-              Weekly Sales
-            </ThemedText>
-            <ThemedText type="default" className='text-gray-200 mx-6'>
-              Sales performance for Main Store - Current week
-            </ThemedText>
+        {/* KPI Cards Grid*/}
+        <View style={styles.kpiContainer}>
+          {/* Daily Sales */}
+          <View style={styles.kpiCard}>
+            <KPICard
+              title="Daily Sales"
+              value="$4,329"
+              icon="cash"
+              trend={{
+                value: '+12.5%',
+                type: 'up',
+              }}
+              subtitle="from yesterday"
+              location="Downtown Branch"
+              status="success"
+            />
           </View>
-          <LineChart
-            data={data}
-            width={screenWidth - 32}
-            height={220}
-            yAxisLabel="$"
-            yAxisSuffix="k"
-            yAxisInterval={1}
-            chartConfig={chartConfig}
-            bezier
-            withInnerLines={false}
-            withOuterLines={true}
-            withVerticalLabels={true}
-            withHorizontalLabels={true}
-          />
-        </LinearGradient>
-      </View>
 
-      {/* AI Insights */}
-      <View style={styles.insightsContainer}>
-
-        {/* Header */}
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-          <View style={{ backgroundColor: Colors.bg_light_secondary, padding: 8, borderRadius: 8 }}>
-            <Ionicons name="bulb-outline" size={24} color={Colors.accent} />
+          {/* Revenue */}
+          <View style={styles.kpiCard}>
+            <KPICard
+              title="Revenue"
+              value="$28,450"
+              icon="trending-up"
+              trend={{
+                value: '+8.2%',
+                type: 'up',
+              }}
+              subtitle="from last week"
+              location="Downtown Branch"
+              status="success"
+            />
           </View>
-          <View>
-            <ThemedText type="defaultSemiBold" style={{ color: Colors.text_primary }} className='text-2xl'>
-              AI Insights
-            </ThemedText>
+
+          {/* Low Stock */}
+          <View style={styles.kpiCard}>
+            <KPICard
+              title="Low Stock"
+              value="7"
+              icon="alert-circle"
+              subtitle="Items need restocking"
+              location="Downtown Branch"
+              status="danger"
+            />
+          </View>
+
+          {/* Products */}
+          <View style={styles.kpiCard}>
+            <KPICard
+              title="Products"
+              value="1,247"
+              icon="cart-outline"
+              trend={{
+                value: '+12.5%',
+                type: 'neutral',
+              }}
+              subtitle="from yesterday"
+              location="Downtown Branch"
+              status="warning"
+            />
           </View>
         </View>
 
-        {/* Insights cards */}
-        <View style={{ flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-          <View style={styles.insightCard}>
-            <ThemedText type="defaultSemiBold" style={{ color: Colors.text_primary, marginBottom: 8 }}>
-              Stock Alert
-            </ThemedText>
-            <ThemedText type="default" style={{ color: Colors.text_seconday }}>
-              "The inventory for Product XYZ is below the reorder level. Consider placing a new order to avoid stockouts."
-            </ThemedText>
+        {/* Analytics con Gradient */}
+        <View style={styles.analyticsContainer}>
+          <LinearGradient
+            colors={[Colors.accent, Colors.primary]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.gradientContainer}
+          >
+            <View style={styles.chartTitleContainer}>
+              <ThemedText type="subtitle" className='text-white mx-6' >
+                Weekly Sales
+              </ThemedText>
+              <ThemedText type="default" className='text-gray-200 mx-6'>
+                Sales performance for Main Store - Current week
+              </ThemedText>
+            </View>
+            <LineChart
+              data={data}
+              width={screenWidth - 32}
+              height={220}
+              yAxisLabel="$"
+              yAxisSuffix="k"
+              yAxisInterval={1}
+              chartConfig={chartConfig}
+              bezier
+              withInnerLines={false}
+              withOuterLines={true}
+              withVerticalLabels={true}
+              withHorizontalLabels={true}
+            />
+          </LinearGradient>
+        </View>
+
+        {/* AI Insights */}
+        <View style={styles.insightsContainer}>
+
+          {/* Header */}
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+            <View style={{ backgroundColor: Colors.bg_light_secondary, padding: 8, borderRadius: 8 }}>
+              <Ionicons name="bulb-outline" size={24} color={Colors.accent} />
+            </View>
+            <View>
+              <ThemedText type="defaultSemiBold" style={{ color: Colors.text_primary }} className='text-2xl'>
+                AI Insights
+              </ThemedText>
+            </View>
           </View>
-          <View style={styles.insightCard}>
-            <ThemedText type="defaultSemiBold" style={{ color: Colors.text_primary, marginBottom: 8 }}>
-              Sales Trend
-            </ThemedText>
-            <ThemedText type="default" style={{ color: Colors.text_seconday }}>
-              "Sales for Category ABC have increased by 15% over the past month. Consider promoting related products to capitalize on this trend."
-            </ThemedText>
+
+          {/* Insights cards */}
+          <View style={{ flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+            <View style={styles.insightCard}>
+              <ThemedText type="defaultSemiBold" style={{ color: Colors.text_primary, marginBottom: 8 }}>
+                Stock Alert
+              </ThemedText>
+              <ThemedText type="default" style={{ color: Colors.text_seconday }}>
+                "The inventory for Product XYZ is below the reorder level. Consider placing a new order to avoid stockouts."
+              </ThemedText>
+            </View>
+            <View style={styles.insightCard}>
+              <ThemedText type="defaultSemiBold" style={{ color: Colors.text_primary, marginBottom: 8 }}>
+                Sales Trend
+              </ThemedText>
+              <ThemedText type="default" style={{ color: Colors.text_seconday }}>
+                "Sales for Category ABC have increased by 15% over the past month. Consider promoting related products to capitalize on this trend."
+              </ThemedText>
+            </View>
           </View>
         </View>
-      </View>
 
-    </SafeScreen>
-  </>
+      </SafeScreen>
+    </>
   );
 }
 

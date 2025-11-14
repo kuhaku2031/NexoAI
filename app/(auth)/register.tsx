@@ -9,7 +9,7 @@ import { Colors, ComponentColors } from '@/constants/Colors';
 import { Checkbox } from 'expo-checkbox';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 export default function RegisterScreen() {
 
@@ -25,8 +25,14 @@ export default function RegisterScreen() {
   }
 
   return (
-    <SafeScreen scrollable={true} edges={['top', 'bottom']} contentContainerStyle={{ paddingTop: 40, paddingBottom: Platform.OS === 'ios' ? 100 : 80, }} backgroundColor={Colors.bg_light}>
-        <View style={styles.header}>
+    <SafeScreen
+      mode={"padding"}
+      scrollable={true}
+      edges={['top', 'bottom']}
+      contentContainerStyle={{ paddingTop: 20}}
+      backgroundColor={Colors.bg_light}>     
+
+      <View style={styles.header}>
           <GradientCircleIcon iconName="storefront-outline" iconSize={40} iconColor={"#ffffff"} />
           <ThemedText type='title' style={{ color: Colors.primary }}>Business POS</ThemedText>
           <ThemedText type='default' style={{ color: Colors.secondary, fontSize: 18 }}>Crea tu cuenta de negocio</ThemedText>
@@ -63,7 +69,7 @@ export default function RegisterScreen() {
 
         </View>
 
-        <View style={{ alignItems: 'center', marginTop: 20 }}>
+        <View style={{ alignItems: 'center', marginTop: 20 }} className='pb-7'>
           <ThemedText type='default' style={{ color: Colors.secondary, fontSize: 16, textAlign: 'center' }}>Protegemos tu información con encriptación de nivel empresarial</ThemedText>
         </View>
     </SafeScreen>

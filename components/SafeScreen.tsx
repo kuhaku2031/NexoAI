@@ -6,7 +6,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface SafeScreenProps {
   children: ReactNode;
+  mode?: 'margin' | 'padding';
   style?: ViewStyle;
+  clasName?: string;
   edges?: ('top' | 'right' | 'bottom' | 'left')[];
   backgroundColor?: string;
   scrollable?: boolean;
@@ -16,7 +18,9 @@ interface SafeScreenProps {
 
 export function SafeScreen({
   children,
+  mode = 'margin',
   style,
+  clasName,
   edges = ['top', 'bottom'],
   backgroundColor = Colors.bg_light_secondary,
   scrollable = false,
@@ -24,26 +28,27 @@ export function SafeScreen({
   centered = false,
 }: SafeScreenProps) {
   const content = scrollable ? (
-    <ScrollView
-      contentContainerStyle={[
-        styles.scrollContent,
-        centered && styles.centered,
-        contentContainerStyle
-      ]}
-      showsVerticalScrollIndicator={false}
-    >
-      {children}
-    </ScrollView>
+    <Animated.ScrollView>
+      <ScrollView
+        contentContainerStyle={[
+          styles.scrollContent,
+          centered && styles.centered,
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
+        {children}
+      </ScrollView>
+    </Animated.ScrollView>
   ) : children;
 
   return (
     <SafeAreaView
-      style={[styles.container, { backgroundColor }, style]}
+      mode={mode}
+      className={clasName}
+      style={[styles.container, { backgroundColor }, style, contentContainerStyle]}
       edges={edges}
     >
-      <Animated.ScrollView>
-        {content}
-      </Animated.ScrollView>
+      {content}
     </SafeAreaView>
   );
 }

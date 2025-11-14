@@ -9,7 +9,7 @@ import { Colors, ComponentColors } from '@/constants/Colors';
 import { Checkbox } from 'expo-checkbox';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 export default function LoginScreen() {
 
@@ -18,7 +18,12 @@ export default function LoginScreen() {
   const [isChecked, setChecked] = useState(false);
 
   return (
-    <SafeScreen style={styles.container} edges={['top', 'bottom']} backgroundColor={Colors.bg_light}>
+    <SafeScreen
+      mode={"padding"}
+      edges={['top', 'bottom']}
+      contentContainerStyle={{ paddingTop: 20, paddingBottom: Platform.OS === 'ios' ? 88 : 68, paddingHorizontal: 24 }}
+      backgroundColor={Colors.bg_light}>
+        
       <View style={styles.content}>
         <View style={styles.header}>
           <GradientCircleIcon iconName="storefront-outline" iconSize={40} iconColor={"#ffffff"} />

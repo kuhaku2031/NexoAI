@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 import { HeaderBar } from '@/components/HeaderBar';
 import { InputDisplay } from '@/components/InputDisplay';
@@ -23,8 +23,12 @@ export default function ChatScreen() {
         showBackButton={true}
         onBackPress={goBack}
       />
-      <SafeScreen scrollable={true} contentContainerStyle={{ paddingBottom: 68, paddingTop: 16, paddingHorizontal: 0 }} edges={["bottom"]}>
-        <View style={styles.chatContainer} className='h-full'>
+      <SafeScreen
+        scrollable={true}
+        edges={['bottom', 'left', 'right',]}
+        contentContainerStyle={{ paddingTop: 0, paddingBottom: Platform.OS === 'ios' ? 88 : 68, paddingHorizontal: 8 }}
+      >        
+      <View style={styles.chatContainer} className="flex-1 mt-4 mb-20">
           <View style={styles.aiMessageContainer}>
             <View style={styles.aiMessageIcon}>
               <MaterialCommunityIcons name="robot-happy-outline" size={24} color={"#ffffff"} className='bg-[#002a52] p-2 rounded-full' />
@@ -42,11 +46,11 @@ export default function ChatScreen() {
         <View style={styles.inputContainer}>
           <View className="flex-1 left-0 right-0">
             <InputDisplay
-            value={message}
-            onChangeText={setMessage}
-            placeholder="Type your message..." 
-            className={"border-none border-0 border-[#002a52] bg-gray-100"}
-            classNameInput={"text-sm bg-gray-100 h-12 px-4 rounded-full"}
+              value={message}
+              onChangeText={setMessage}
+              placeholder="Type your message..."
+              className={"border-none border-0 border-[#002a52  ] bg-gray-100"}
+              classNameInput={"text-sm bg-gray-100 h-12 px-4 rounded-full"}
             />
           </View>
           <View className='fles align-middle justify-center ml-4'>
@@ -65,6 +69,7 @@ const styles = StyleSheet.create({
   chatContainer: {
     borderRadius: 16,
     overflow: 'hidden',
+  
   },
 
   // =============================
