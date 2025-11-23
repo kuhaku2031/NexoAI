@@ -3,9 +3,12 @@ import { Dimensions, Platform, StyleSheet, View } from 'react-native';
 import { DropDownStyled } from '@/components/DropDwonStyled';
 import { HeaderBar } from '@/components/HeaderBar';
 import { KPICard } from '@/components/KPICard';
+import { PermissionGuard } from '@/components/PermissionGuard';
 import { SafeScreen } from '@/components/SafeScreen';
 import { ThemedText } from '@/components/ThemedText';
 import { Colors, ComponentColors } from '@/constants/Colors';
+import { useAuth } from '@/hooks/useAuth';
+import { Permission } from '@/types/auth.types';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { goBack } from 'expo-router/build/global-state/routing';
@@ -17,6 +20,7 @@ const SCREEN_PADDING = 40;
 const screenWidth = Dimensions.get("window").width - SCREEN_PADDING;
 
 export default function DashboardScreen() {
+  const { user } = useAuth();
 
   const data = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
@@ -168,74 +172,78 @@ export default function DashboardScreen() {
           </View>
         </View>
 
-        {/* Analytics con Gradient */}
-        <View style={styles.analyticsContainer}>
-          <LinearGradient
-            colors={[Colors.accent, Colors.primary]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.gradientContainer}
-          >
-            <View style={styles.chartTitleContainer}>
-              <ThemedText type="subtitle" className='text-white mx-6' >
-                Weekly Sales
-              </ThemedText>
-              <ThemedText type="default" className='text-gray-200 mx-6'>
-                Sales performance for Main Store - Current week
-              </ThemedText>
-            </View>
-            <LineChart
-              data={data}
-              width={screenWidth - 32}
-              height={220}
-              yAxisLabel="$"
-              yAxisSuffix="k"
-              yAxisInterval={1}
-              chartConfig={chartConfig}
-              bezier
-              withInnerLines={false}
-              withOuterLines={true}
-              withVerticalLabels={true}
-              withHorizontalLabels={true}
-            />
-          </LinearGradient>
-        </View>
+        {/* Analytics con Gradient - Solo visible con permiso VIEW_ANALYTICS */}
+        <PermissionGuard permission={Permission.VIEW_ANALYTICS}>
+          <View style={styles.analyticsContainer}>
+            <LinearGradient
+              colors={[Colors.accent, Colors.primary]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.gradientContainer}
+            >
+              <View style={styles.chartTitleContainer}>
+                <ThemedText type="subtitle" className='text-white mx-6' >
+                  Weekly Sales
+                </ThemedText>
+                <ThemedText type="default" className='text-gray-200 mx-6'>
+                  Sales performance for Main Store - Current week
+                </ThemedText>
+              </View>
+              <LineChart
+                data={data}
+                width={screenWidth - 32}
+                height={220}
+                yAxisLabel="$"
+                yAxisSuffix="k"
+                yAxisInterval={1}
+                chartConfig={chartConfig}
+                bezier
+                withInnerLines={false}
+                withOuterLines={true}
+                withVerticalLabels={true}
+                withHorizontalLabels={true}
+              />
+            </LinearGradient>
+          </View>
+        </PermissionGuard>
 
-        {/* AI Insights */}
-        <View style={styles.insightsContainer}>
+        {/* AI Insights - Solo visible con permiso VIEW_AI_INSIGHTS */}
+        <PermissionGuard permission={Permission.VIEW_AI_INSIGHTS}>
+          <View style={styles.insightsContainer}>
 
-          {/* Header */}
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-            <View style={{ backgroundColor: Colors.bg_light_secondary, padding: 8, borderRadius: 8 }}>
-              <Ionicons name="bulb-outline" size={24} color={Colors.accent} />
+            {/* Header */}
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+              <View style={{ backgroundColor: Colors.bg_light_secondary, padding: 8, borderRadius: 8 }}>
+                <Ionicons name="bulb-outline" size={24} color={Colors.accent} />
+              </View>
+              <View>
+                <ThemedText type="defaultSemiBold" style={{ color: Colors.text_primary }} className='text-2xl'>
+                  AI Insights
+                </ThemedText>
+              </View>
             </View>
-            <View>
-              <ThemedText type="defaultSemiBold" style={{ color: Colors.text_primary }} className='text-2xl'>
-                AI Insights
-              </ThemedText>
+
+            {/* Insights cards */}
+            <View style={{ flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+              <View style={styles.insightCard}>
+                <ThemedText type="defaultSemiBold" style={{ color: Colors.text_primary, marginBottom: 8 }}>
+                  Stock Alert
+                </ThemedText>
+                <ThemedText type="default" style={{ color: Colors.text_seconday }}>
+                  The inventory for Product XYZ is below the reorder level. Consider placing a new order to avoid stockouts.
+                </ThemedText>
+              </View>
+              <View style={styles.insightCard}>
+                <ThemedText type="defaultSemiBold" style={{ color: Colors.text_primary, marginBottom: 8 }}>
+                  Sales Trend
+                </ThemedText>
+                <ThemedText type="default" style={{ color: Colors.text_seconday }}>
+                  Sales for Category ABC have increased by 15% over the past month. Consider promoting related products to capitalize on this trend.
+                </ThemedText>
+              </View>
             </View>
           </View>
-
-          {/* Insights cards */}
-          <View style={{ flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-            <View style={styles.insightCard}>
-              <ThemedText type="defaultSemiBold" style={{ color: Colors.text_primary, marginBottom: 8 }}>
-                Stock Alert
-              </ThemedText>
-              <ThemedText type="default" style={{ color: Colors.text_seconday }}>
-                The inventory for Product XYZ is below the reorder level. Consider placing a new order to avoid stockouts.
-              </ThemedText>
-            </View>
-            <View style={styles.insightCard}>
-              <ThemedText type="defaultSemiBold" style={{ color: Colors.text_primary, marginBottom: 8 }}>
-                Sales Trend
-              </ThemedText>
-              <ThemedText type="default" style={{ color: Colors.text_seconday }}>
-                Sales for Category ABC have increased by 15% over the past month. Consider promoting related products to capitalize on this trend.
-              </ThemedText>
-            </View>
-          </View>
-        </View>
+        </PermissionGuard>
 
       </SafeScreen>
     </>

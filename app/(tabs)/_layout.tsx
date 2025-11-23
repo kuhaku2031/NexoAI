@@ -1,42 +1,22 @@
 // app/(tabs)/_layout.tsx
+import { getVisibleTabs } from '@/config/tabs.config';
 import { Colors } from '@/constants/Colors';
+import { useAuth } from '@/hooks/useAuth';
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
+import { useMemo } from 'react';
 import { Platform } from 'react-native';
 
 export default function TabLayout() {
+  const { hasPermission, isAuthenticated } = useAuth();
 
-  const tabsConfig: {
-    name: string;
-    title: string;
-    icon: keyof typeof Ionicons.glyphMap;
-  }[] = [
-      {
-        name: 'chat/index',
-        title: 'Chat',
-        icon: 'chatbubbles-outline',
-      },
-      {
-        name: 'products/index',
-        title: 'Products',
-        icon: 'pricetags-outline',
-      },
-      {
-        name: 'dashboard/index',
-        title: 'Dashboard',
-        icon: 'grid-outline',
-      },
-      {
-        name: 'pos/index',
-        title: 'POS',
-        icon: 'calculator-outline',
-      },
-      {
-        name: 'profile/index',
-        title: 'Profile',
-        icon: 'person-outline',
-      },
-    ];
+  // Filtrar tabs basado en permisos del usuario
+  const visibleTabs = useMemo(() => {
+    if (!isAuthenticated) {
+      return [];
+    }
+    return getVisibleTabs(hasPermission);
+  }, [hasPermission, isAuthenticated]);
 
   return (
     <Tabs
@@ -82,7 +62,7 @@ export default function TabLayout() {
         },
       }}
     >
-      {tabsConfig.map(({ name, title, icon }) => (
+      {visibleTabs.map(({ name, title, icon }) => (
         <Tabs.Screen
           key={name}
           name={name}
@@ -93,7 +73,7 @@ export default function TabLayout() {
                 focused={focused}
                 color={color}
                 size={20}
-                name={icon}
+                name={icon as keyof typeof Ionicons.glyphMap}
               />
             ),
           }}

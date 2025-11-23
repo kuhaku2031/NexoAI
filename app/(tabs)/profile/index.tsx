@@ -3,6 +3,7 @@ import { Image, Platform, Pressable, StyleSheet, Switch, TextInput, View } from 
 import { HeaderBar } from '@/components/HeaderBar';
 import { SafeScreen } from '@/components/SafeScreen';
 import { ThemedText } from '@/components/ThemedText';
+import { UserSwitcher } from '@/components/UserSwitcher';
 import { Colors, ComponentColors } from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -49,6 +50,8 @@ export default function ProfileScreen() {
         edges={['bottom', 'left', 'right']}
         contentContainerStyle={{ paddingTop: 20, paddingBottom: Platform.OS === 'ios' ? 88 : 68 }}
       >
+        {/* Development User Switcher */}
+        <UserSwitcher />
         {/* Profile Header with Gradient */}
         <View style={styles.profileHeaderContainer}>
           <LinearGradient

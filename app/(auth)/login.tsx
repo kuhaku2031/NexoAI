@@ -6,16 +6,34 @@ import { SafeScreen } from '@/components/SafeScreen';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { Colors, ComponentColors } from '@/constants/Colors';
+import { useAuth } from '@/hooks/useAuth';
 import { Checkbox } from 'expo-checkbox';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Alert, Platform, StyleSheet, View } from 'react-native';
 
 export default function LoginScreen() {
 
+  const { login, isLoading } = useAuth();
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [isChecked, setChecked] = useState(false);
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Por favor ingrese email y contraseña');
+      return;
+    }
+
+    try {
+      await login(email, password);
+      // La redirección se manejará automáticamente por el layout o el contexto
+      // pero por seguridad podemos forzarla aquí si es necesario
+      router.replace('/(tabs)');
+    } catch (error) {
+      Alert.alert('Error', 'Credenciales inválidas o error de conexión' + error);
+    }
+  };
 
   return (
     <SafeScreen
@@ -23,7 +41,7 @@ export default function LoginScreen() {
       edges={['top', 'bottom']}
       contentContainerStyle={{ paddingTop: 20, paddingBottom: Platform.OS === 'ios' ? 88 : 68, paddingHorizontal: 24 }}
       backgroundColor={Colors.bg_light}>
-        
+
       <View style={styles.content}>
         <View style={styles.header}>
           <GradientCircleIcon iconName="storefront-outline" iconSize={40} iconColor={"#ffffff"} />
@@ -46,7 +64,12 @@ export default function LoginScreen() {
             <ThemedText type='link'  >Olvidaste tu contraseña?</ThemedText>
           </View>
 
-          <ThemedButton title='Iniciar Sesion' onPress={() => router.push('/(tabs)')} type='gradient' disabled={false} />
+          <ThemedButton
+            title={isLoading ? 'Iniciando...' : 'Iniciar Sesion'}
+            onPress={handleLogin}
+            type='gradient'
+            disabled={isLoading}
+          />
 
           <DividerWithText text="¿No tienes cuenta?" />
 
