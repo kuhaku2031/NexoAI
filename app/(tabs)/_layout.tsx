@@ -44,10 +44,12 @@ export default function TabLayout() {
         headerShown: false,
         tabBarActiveTintColor: "#ffffffff",
         tabBarInactiveTintColor: Colors.bg_dark_secondary,
+        tabBarBackground: () => null,
         tabBarActiveBackgroundColor: Colors.bg_dark,
         tabBarItemStyle: {
-          marginHorizontal: 8,
+          marginHorizontal: 4,
           borderRadius: 16,
+          overflow: 'hidden', // Importante para que el borderRadius funcione
         },
         tabBarStyle: Platform.select({
           ios: {
@@ -75,11 +77,12 @@ export default function TabLayout() {
           fontWeight: '600',
           marginBottom: Platform.OS === 'ios' ? 12 : 0,
           borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,       
-           },
+          borderTopRightRadius: 20,
+          backgroundColor: "transparent",
+        },
       }}
     >
-      {tabsConfig.map(({ name, title, icon}) => (
+      {tabsConfig.map(({ name, title, icon }) => (
         <Tabs.Screen
           key={name}
           name={name}

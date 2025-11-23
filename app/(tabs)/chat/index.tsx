@@ -27,15 +27,15 @@ export default function ChatScreen() {
         scrollable={true}
         edges={['bottom', 'left', 'right',]}
         contentContainerStyle={{ paddingTop: 0, paddingBottom: Platform.OS === 'ios' ? 88 : 68, paddingHorizontal: 8 }}
-      >        
-      <View style={styles.chatContainer} className="flex-1 mt-4 mb-20">
+      >
+        <View style={styles.chatContainer} className="flex-1 mt-4 mb-20">
           <View style={styles.aiMessageContainer}>
             <View style={styles.aiMessageIcon}>
               <MaterialCommunityIcons name="robot-happy-outline" size={24} color={"#ffffff"} className='bg-[#002a52] p-2 rounded-full' />
             </View>
             <View style={styles.aiMessageContent}>
               <ThemedText type="default" style={styles.aiMessageText}>
-                Hello! I'm your AI assistant for the POS system. How can I help you today?
+                Hello! Im your AI assistant for the POS system. How can I help you today?
               </ThemedText>
             </View>
           </View>
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   chatContainer: {
     borderRadius: 16,
     overflow: 'hidden',
-  
+
   },
 
   // =============================

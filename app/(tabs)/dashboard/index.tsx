@@ -223,7 +223,7 @@ export default function DashboardScreen() {
                 Stock Alert
               </ThemedText>
               <ThemedText type="default" style={{ color: Colors.text_seconday }}>
-                "The inventory for Product XYZ is below the reorder level. Consider placing a new order to avoid stockouts."
+                The inventory for Product XYZ is below the reorder level. Consider placing a new order to avoid stockouts.
               </ThemedText>
             </View>
             <View style={styles.insightCard}>
@@ -231,7 +231,7 @@ export default function DashboardScreen() {
                 Sales Trend
               </ThemedText>
               <ThemedText type="default" style={{ color: Colors.text_seconday }}>
-                "Sales for Category ABC have increased by 15% over the past month. Consider promoting related products to capitalize on this trend."
+                Sales for Category ABC have increased by 15% over the past month. Consider promoting related products to capitalize on this trend.
               </ThemedText>
             </View>
           </View>
