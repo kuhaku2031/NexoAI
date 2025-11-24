@@ -2,11 +2,8 @@ import { API_CONFIG, STORAGE_KEYS } from "@/config/api.config";
 import { User } from "@/types/auth.types";
 import { mapBackendRoleToFrontend } from "@/utils/roleMapper";
 import { StorageUtil } from "@/utils/storage";
-import { ApiClient } from "./apiClient";
+import { api } from "./apiClient";
 
-/**
- * Tipos para la respuesta del backend
- */
 interface BackendLoginResponse {
   access_token: string;
   refresh_token: string;
@@ -29,32 +26,30 @@ interface BackendRegisterResponse {
   role: string;
 }
 
-/**
- * Servicio de autenticación
- * Maneja login, registro, logout y manejo de tokens
- */
 export class AuthService {
   /**
    * Inicia sesión con email y contraseña
    */
   static async login(email: string, password: string): Promise<User> {
     try {
-      const response = await ApiClient.post<BackendLoginResponse>(
+      const response = await api.post<BackendLoginResponse>(
         API_CONFIG.ENDPOINTS.AUTH.LOGIN,
         { email, password }
       );
 
+      const { access_token, refresh_token, user: backendUser } = response.data;
+
       // Guardar tokens
-      await StorageUtil.set(STORAGE_KEYS.ACCESS_TOKEN, response.access_token);
-      await StorageUtil.set(STORAGE_KEYS.REFRESH_TOKEN, response.refresh_token);
+      await StorageUtil.set(STORAGE_KEYS.ACCESS_TOKEN, access_token);
+      await StorageUtil.set(STORAGE_KEYS.REFRESH_TOKEN, refresh_token);
 
       // Convertir datos del backend al formato del frontend
       const user: User = {
-        id: response.user.company_id, // Usando company_id como id del usuario
-        name: `${response.user.first_name} ${response.user.last_name}`,
-        email: response.user.email,
-        role: mapBackendRoleToFrontend(response.user.role),
-        pointOfSaleId: response.user.company_id, // Esto puede cambiar según tu lógica
+        id: backendUser.company_id,
+        name: `${backendUser.first_name} ${backendUser.last_name}`,
+        email: backendUser.email,
+        role: mapBackendRoleToFrontend(backendUser.role),
+        pointOfSaleId: backendUser.company_id,
       };
 
       // Guardar datos del usuario
@@ -79,7 +74,7 @@ export class AuthService {
     phone_number: number;
   }): Promise<User> {
     try {
-      await ApiClient.post<BackendRegisterResponse>(
+      await api.post<BackendRegisterResponse>(
         API_CONFIG.ENDPOINTS.AUTH.REGISTER,
         data
       );
@@ -97,7 +92,6 @@ export class AuthService {
    */
   static async logout(): Promise<void> {
     try {
-      // Limpiar todos los datos almacenados
       await StorageUtil.remove(STORAGE_KEYS.ACCESS_TOKEN);
       await StorageUtil.remove(STORAGE_KEYS.REFRESH_TOKEN);
       await StorageUtil.remove(STORAGE_KEYS.USER_DATA);
@@ -112,8 +106,7 @@ export class AuthService {
    */
   static async getCurrentUser(): Promise<User | null> {
     try {
-      const user = await StorageUtil.get<User>(STORAGE_KEYS.USER_DATA);
-      return user;
+      return await StorageUtil.get<User>(STORAGE_KEYS.USER_DATA);
     } catch (error) {
       console.error("Error getting current user:", error);
       return null;
@@ -121,43 +114,49 @@ export class AuthService {
   }
 
   /**
-   * Verifica si hay una sesión activa
+   * Verifica si el token es válido llamando al backend
    */
-  static async isAuthenticated(): Promise<boolean> {
+  static async validateSession(): Promise<User | null> {
+    try {
+      // Intentar obtener el perfil del usuario para validar el token
+      // Asumimos que existe un endpoint /users/me o similar
+      // Si falla con 401, el interceptor intentará renovar
+      // Si falla finalmente, retornará null
+
+      // Nota: Si no tienes un endpoint específico para validar,
+      // puedes confiar en que si tienes token y no da 401, estás bien.
+      // Pero lo ideal es llamar a 'me'.
+
+      // Usamos el endpoint USERS.ME definido en api.config
+      // Si no está implementado en backend, esto fallará.
+      // Por ahora, si no quieres llamar al backend, puedes usar solo local check.
+      // Pero el usuario pidió "comprobación de si este token sigue activo".
+
+      await api.get(API_CONFIG.ENDPOINTS.USERS.ME);
+
+      // Si tenemos respuesta exitosa, actualizamos los datos locales por si cambiaron
+      // (Asumiendo que devuelve la estructura del usuario)
+      // Ajusta esto según tu respuesta real de /users/me
+
+      // Por ahora, retornamos el usuario local si la llamada fue exitosa
+      return await this.getCurrentUser();
+    } catch (error) {
+      console.error("Session validation error:", error);
+      return null;
+    }
+  }
+
+  /**
+   * Verifica si hay tokens almacenados (chequeo rápido)
+   */
+  static async hasTokens(): Promise<boolean> {
     try {
       const accessToken = await StorageUtil.get<string>(
         STORAGE_KEYS.ACCESS_TOKEN
       );
-      const user = await StorageUtil.get<User>(STORAGE_KEYS.USER_DATA);
-
-      return !!(accessToken && user);
-    } catch (error) {
-      console.error("Error checking authentication:", error);
+      return !!accessToken;
+    } catch {
       return false;
-    }
-  }
-
-  /**
-   * Obtiene el access token actual
-   */
-  static async getAccessToken(): Promise<string | null> {
-    try {
-      return await StorageUtil.get<string>(STORAGE_KEYS.ACCESS_TOKEN);
-    } catch (error) {
-      console.error("Error getting access token:", error);
-      return null;
-    }
-  }
-
-  /**
-   * Obtiene el refresh token actual
-   */
-  static async getRefreshToken(): Promise<string | null> {
-    try {
-      return await StorageUtil.get<string>(STORAGE_KEYS.REFRESH_TOKEN);
-    } catch (error) {
-      console.error("Error getting refresh token:", error);
-      return null;
     }
   }
 }

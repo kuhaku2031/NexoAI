@@ -1,203 +1,87 @@
+import axios from "axios";
 import { API_CONFIG, STORAGE_KEYS } from "@/config/api.config";
 import { StorageUtil } from "@/utils/storage";
 
 /**
- * Cliente HTTP base para todas las peticiones a la API
- * Incluye manejo automático de tokens y refresh
+ * Instancia de Axios configurada
  */
-export class ApiClient {
-  private static baseURL = API_CONFIG.BASE_URL;
-  private static timeout = API_CONFIG.TIMEOUT;
-  private static isRefreshing = false;
-  private static refreshSubscribers: ((token: string) => void)[] = [];
+export const api = axios.create({
+  baseURL: API_CONFIG.BASE_URL,
+  timeout: API_CONFIG.TIMEOUT,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
-  /**
-   * Realiza una petición HTTP
-   */
-  static async request<T>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`;
-
-    // Obtener token de acceso
-    const accessToken = await StorageUtil.get<string>(
-      STORAGE_KEYS.ACCESS_TOKEN
-    );
-
-    // Configurar headers
-    const headers: Record<string, string> = {
-      "Content-Type": "application/json",
-      ...(options.headers as Record<string, string>),
-    };
-
-    // Añadir token si existe
-    if (accessToken) {
-      headers["Authorization"] = `Bearer ${accessToken}`;
+/**
+ * Interceptor de Request
+ * Añade el token de acceso a cada petición
+ */
+api.interceptors.request.use(
+  async (config) => {
+    const token = await StorageUtil.get<string>(STORAGE_KEYS.ACCESS_TOKEN);
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), this.timeout);
+/**
+ * Interceptor de Response
+ * Maneja errores 401 y renueva el token
+ */
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
 
-      const response = await fetch(url, {
-        ...options,
-        headers,
-        signal: controller.signal,
-      });
+    // Si el error es 401 y no hemos reintentado aún
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
 
-      clearTimeout(timeoutId);
-
-      // Si el token expiró, intentar renovarlo
-      if (response.status === 401) {
+      try {
         const refreshToken = await StorageUtil.get<string>(
           STORAGE_KEYS.REFRESH_TOKEN
         );
 
-        if (refreshToken) {
-          try {
-            const newToken = await this.refreshAccessToken(refreshToken);
+        if (!refreshToken) {
+          throw new Error("No refresh token available");
+        }
 
-            // Reintentar la petición con el nuevo token
-            headers["Authorization"] = `Bearer ${newToken}`;
-            const retryResponse = await fetch(url, {
-              ...options,
-              headers,
-            });
-
-            if (!retryResponse.ok) {
-              throw new Error(`HTTP error! status: ${retryResponse.status}`);
-            }
-
-            return await retryResponse.json();
-          } catch {
-            // Si falla el refresh, limpiar tokens y lanzar error
-            await this.clearTokens();
-            throw new Error("Session expired. Please login again.");
+        // Intentar renovar el token
+        // Nota: Usamos axios.post directamente para evitar el interceptor y bucles infinitos
+        const response = await axios.post(
+          `${API_CONFIG.BASE_URL}/${API_CONFIG.ENDPOINTS.AUTH.REFRESH}`,
+          {
+            refresh_token: refreshToken,
           }
-        } else {
-          throw new Error("Authentication required");
-        }
-      }
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(
-          errorData.message || `HTTP error! status: ${response.status}`
         );
-      }
 
-      return await response.json();
-    } catch (error) {
-      if (error instanceof Error) {
-        if (error.name === "AbortError") {
-          throw new Error("Request timeout");
-        }
-        throw error;
-      }
-      throw new Error("Unknown error occurred");
-    }
-  }
+        const { access_token } = response.data;
 
-  /**
-   * Renueva el access token usando el refresh token
-   */
-  private static async refreshAccessToken(
-    refreshToken: string
-  ): Promise<string> {
-    if (this.isRefreshing) {
-      // Si ya se está refrescando, esperar a que termine
-      return new Promise((resolve) => {
-        this.refreshSubscribers.push((token: string) => {
-          resolve(token);
-        });
-      });
+        // Guardar nuevo token
+        await StorageUtil.set(STORAGE_KEYS.ACCESS_TOKEN, access_token);
+
+        // Actualizar header de la petición original
+        originalRequest.headers.Authorization = `Bearer ${access_token}`;
+
+        // Reintentar la petición original
+        return api(originalRequest);
+      } catch (refreshError) {
+        // Si falla la renovación, limpiar sesión
+        await StorageUtil.remove(STORAGE_KEYS.ACCESS_TOKEN);
+        await StorageUtil.remove(STORAGE_KEYS.REFRESH_TOKEN);
+        await StorageUtil.remove(STORAGE_KEYS.USER_DATA);
+
+        // Aquí podrías emitir un evento para redirigir al login
+        return Promise.reject(refreshError);
+      }
     }
 
-    this.isRefreshing = true;
-
-    try {
-      const response = await fetch(
-        `${this.baseURL}${API_CONFIG.ENDPOINTS.AUTH.REFRESH}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ refresh_token: refreshToken }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to refresh token");
-      }
-
-      const data = await response.json();
-      const newAccessToken = data.access_token;
-
-      // Guardar nuevo token
-      await StorageUtil.set(STORAGE_KEYS.ACCESS_TOKEN, newAccessToken);
-
-      // Notificar a los suscriptores
-      this.refreshSubscribers.forEach((callback) => callback(newAccessToken));
-      this.refreshSubscribers = [];
-
-      return newAccessToken;
-    } finally {
-      this.isRefreshing = false;
-    }
+    return Promise.reject(error);
   }
-
-  /**
-   * Limpia todos los tokens
-   */
-  private static async clearTokens(): Promise<void> {
-    await StorageUtil.remove(STORAGE_KEYS.ACCESS_TOKEN);
-    await StorageUtil.remove(STORAGE_KEYS.REFRESH_TOKEN);
-    await StorageUtil.remove(STORAGE_KEYS.USER_DATA);
-  }
-
-  /**
-   * GET request
-   */
-  static async get<T>(endpoint: string): Promise<T> {
-    return this.request<T>(endpoint, { method: "GET" });
-  }
-
-  /**
-   * POST request
-   */
-  static async post<T>(endpoint: string, data?: any): Promise<T> {
-    return this.request<T>(endpoint, {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
-  }
-
-  /**
-   * PUT request
-   */
-  static async put<T>(endpoint: string, data?: any): Promise<T> {
-    return this.request<T>(endpoint, {
-      method: "PUT",
-      body: JSON.stringify(data),
-    });
-  }
-
-  /**
-   * DELETE request
-   */
-  static async delete<T>(endpoint: string): Promise<T> {
-    return this.request<T>(endpoint, { method: "DELETE" });
-  }
-
-  /**
-   * PATCH request
-   */
-  static async patch<T>(endpoint: string, data?: any): Promise<T> {
-    return this.request<T>(endpoint, {
-      method: "PATCH",
-      body: JSON.stringify(data),
-    });
-  }
-}
+);

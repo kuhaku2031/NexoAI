@@ -11,46 +11,7 @@ interface AuthProviderProps {
     children: ReactNode;
 }
 
-/**
- * Usuarios estáticos para pruebas de desarrollo
- * TODO: ELIMINAR EN PRODUCCIÓN
- */
-export const MOCK_USERS: Record<string, User> = {
-    admin: {
-        id: '1',
-        name: 'Admin User',
-        email: 'admin@example.com',
-        role: UserRole.ADMIN,
-        pointOfSaleId: 'pos-1',
-    },
-    employee: {
-        id: '2',
-        name: 'Employee User',
-        email: 'employee@example.com',
-        role: UserRole.CASHIER,
-        pointOfSaleId: 'pos-1',
-    },
-    manager: {
-        id: '3',
-        name: 'Manager User',
-        email: 'manager@example.com',
-        role: UserRole.MANAGER,
-        pointOfSaleId: 'pos-1',
-    },
-    viewer: {
-        id: '4',
-        name: 'Viewer User',
-        email: 'viewer@example.com',
-        role: UserRole.VIEWER,
-        pointOfSaleId: 'pos-1',
-    },
-};
 
-/**
- * Configuración: Usar datos mock o API real
- * Cambiar a false cuando quieras usar el backend real
- */
-const USE_MOCK_DATA = false; // true en desarrollo, false en producción
 
 /**
  * Provider de autenticación que maneja el estado del usuario y sus permisos
@@ -71,20 +32,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
         try {
             setIsLoading(true);
 
-            if (USE_MOCK_DATA) {
-                // Modo desarrollo: usar datos mock
-                console.log('🔧 Usando datos MOCK para desarrollo');
-                setUser(MOCK_USERS.admin);
-            } else {
-                // Modo producción: cargar desde backend
-                const isAuth = await AuthService.isAuthenticated();
+            // Modo producción: verificar sesión real
+            const hasTokens = await AuthService.hasTokens();
 
-                if (isAuth) {
-                    const userData = await AuthService.getCurrentUser();
-                    setUser(userData);
+            if (hasTokens) {
+                // Validar con el backend si el token sigue activo
+                const validatedUser = await AuthService.validateSession();
+
+                if (validatedUser) {
+                    setUser(validatedUser);
                 } else {
+                    // Si la validación falla (token inválido y refresh falló), limpiar
+                    await AuthService.logout();
                     setUser(null);
                 }
+            } else {
+                setUser(null);
             }
         } catch (error) {
             console.error('Error loading user:', error);
@@ -100,23 +63,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const login = async (email: string, password: string) => {
         try {
             setIsLoading(true);
-
-            if (USE_MOCK_DATA) {
-                // Modo desarrollo: simular login
-                console.log('🔧 Login MOCK:', email);
-                const userData: User = {
-                    id: '1',
-                    name: 'Admin User',
-                    email: email,
-                    role: UserRole.ADMIN,
-                    pointOfSaleId: 'pos-1',
-                };
-                setUser(userData);
-            } else {
-                // Modo producción: usar API real
-                const userData = await AuthService.login(email, password);
-                setUser(userData);
-            }
+            // Modo producción: usar API real
+            const userData = await AuthService.login(email, password);
+            setUser(userData);
         } catch (error) {
             console.error('Login error:', error);
             throw error;
@@ -130,10 +79,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
      */
     const logout = async () => {
         try {
-            if (!USE_MOCK_DATA) {
-                // Solo limpiar storage si no estamos en modo mock
-                await AuthService.logout();
-            }
+            await AuthService.logout();
             setUser(null);
         } catch (error) {
             console.error('Logout error:', error);
@@ -178,20 +124,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         return user.role === role;
     };
 
-    /**
-     * Cambia entre usuarios estáticos para pruebas
-     * TODO: ELIMINAR EN PRODUCCIÓN
-     * Solo funciona en modo MOCK
-     */
-    const switchUser = (userType: 'admin' | 'employee' | 'manager' | 'viewer') => {
-        if (USE_MOCK_DATA) {
-            console.log('🔧 Cambiando a usuario MOCK:', userType);
-            setUser(MOCK_USERS[userType]);
-        } else {
-            console.warn('switchUser() solo funciona en modo MOCK');
-        }
-    };
-
     const value: AuthContextType = {
         user,
         isAuthenticated: !!user,
@@ -202,7 +134,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         hasAnyPermission,
         hasAllPermissions,
         hasRole,
-        switchUser: USE_MOCK_DATA ? switchUser : undefined, // Solo en desarrollo
     };
 
     return (
@@ -211,4 +142,5 @@ export function AuthProvider({ children }: AuthProviderProps) {
         </AuthContext.Provider>
     );
 }
+
 

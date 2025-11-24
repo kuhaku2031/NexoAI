@@ -6,9 +6,10 @@ import Constants from "expo-constants";
  */
 export const API_CONFIG = {
   // URL base de la API
+  // Usamos la IP del host de Expo para que funcione en dispositivos físicos y emuladores Android
   BASE_URL: __DEV__
-    ? "http://localhost:3000" // Desarrollo local
-    : "https://api.tudominio.com", // Producción (cambiar por tu dominio)
+    ? `http://${Constants.expoConfig?.hostUri?.split(":").shift() || "localhost"}:3001`
+    : "https://api.tudominio.com",
 
   // Timeout para las peticiones (10 segundos)
   TIMEOUT: 10000,
@@ -16,27 +17,27 @@ export const API_CONFIG = {
   // Endpoints de la API
   ENDPOINTS: {
     AUTH: {
-      LOGIN: "/auth/login",
-      REGISTER: "/auth/register",
-      REFRESH: "/auth/refresh",
+      LOGIN: "api/v1/auth/login",
+      REGISTER: "api/v1/auth/register",
+      REFRESH: "api/v1/auth/refresh",
     },
     USERS: {
-      ME: "/users/me",
-      UPDATE: "/users/update",
+      ME: "api/v1/users/me",
+      UPDATE: "api/v1/users/update",
     },
     PRODUCTS: {
-      LIST: "/products",
-      CREATE: "/products",
-      UPDATE: "/products",
-      DELETE: "/products",
+      LIST: "api/v1/products",
+      CREATE: "api/v1/products",
+      UPDATE: "api/v1/products",
+      DELETE: "api/v1/products",
     },
     POS: {
-      CREATE_SALE: "/sales",
-      GET_SALES: "/sales",
+      CREATE_SALE: "api/v1/sales",
+      GET_SALES: "api/v1/sales",
     },
     ANALYTICS: {
-      DASHBOARD: "/analytics/dashboard",
-      REPORTS: "/analytics/reports",
+      DASHBOARD: "api/v1/analytics/dashboard",
+      REPORTS: "api/v1/analytics/reports",
     },
   },
 };
